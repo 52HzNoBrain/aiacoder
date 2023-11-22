@@ -42,8 +42,13 @@ export async function postCompletion(fimPrefixCode: string, fimSuffixCode: strin
         };
         console.debug("request.data:", data)
         const uri = "/generate"
+        const authorization = workspace.getConfiguration("CodeShell").get("authorization") as string;
         // const uri = "/codeshell-code/completion"
-        const response = await axiosInstance.post<CompletionResponse>(serverAddress + uri, data);
+        const response = await axiosInstance.post<CompletionResponse>(serverAddress + uri, data, {
+            headers: {
+                authorization
+            }
+        });
         console.debug("response.data:", response.data)
         return response.data.generated_text?.replace("<|endoftext|>", "");
     }
